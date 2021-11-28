@@ -1,4 +1,3 @@
-from os import name
 from typing import Optional
 from pydantic import BaseModel
 from pydantic.fields import Field
@@ -20,8 +19,8 @@ class OrganizationRes(OrganizationReq):
     """
 
     organizationId: str = Field(..., description="UUID of the Organization")
-    creation_time: datetime = Field(..., description="Creattion time of Organization")
-    last_modified_time: datetime = Field(..., description="last modified time of Organization")
+    creationTime: datetime = Field(..., description="Creattion time of Organization")
+    lastModifiedTime: datetime = Field(..., description="last modified time of Organization")
     version: str = Field(..., description="Version of the Organization")
 
     class Config:

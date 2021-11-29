@@ -16,8 +16,6 @@ class BaseCrud(ABC):
 
     async def read_specific(self, data):
         resource = await self._collection.find_one(data)
-        print(resource)
         if resource:
-            j = json.loads(json.dumps(resource, cls=MongoDbOrganizaionEncoder))
-            print(j)
-            return j
+            return json.loads(json.dumps(resource, cls=MongoDbOrganizaionEncoder))
+

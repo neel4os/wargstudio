@@ -31,6 +31,7 @@ async def create_organization(
     response_model=OrganizationRes,
     summary="Retrieve deails of a specific organization",
     description="Get details of organization defined by organizationId",
+    response_model_by_alias=False,
 )
 async def get_organization(
     organizationId: str, collection: AsyncIOMotorCollection = Depends(get_db)

@@ -18,7 +18,9 @@ class OrganizationRes(OrganizationReq):
     Response model for the Organization
     """
 
-    organizationId: str = Field(..., description="UUID of the Organization")
+    organizationId: str = Field(
+        ..., description="UUID of the Organization", alias="_id"
+    )
     creationTime: datetime = Field(..., description="Creattion time of Organization")
     lastModifiedTime: datetime = Field(
         ..., description="last modified time of Organization"
@@ -27,4 +29,6 @@ class OrganizationRes(OrganizationReq):
 
     class Config:
         extra = "ignore"
+        allow_population_by_field_name = True
+        # fields = {"_id": "organizationId"}
 

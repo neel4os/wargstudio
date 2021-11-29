@@ -17,8 +17,8 @@ class Organization:
     async def create(self, org_in: OrganizationReq) -> OrganizationRes:
         try:
             _data = org_in.dict()
-            _data["creation_time"] = datetime.utcnow()
-            _data["last_modified_time"] = datetime.utcnow()
+            _data["creationTime"] = datetime.utcnow()
+            _data["lastModifiedTime"] = _data["creationTime"]
             _data["version"] = "1"
             _resource = await OrganizationCrud(self._collection).create(data=_data)
             _data["organizationId"] = str(_resource.inserted_id)

@@ -1,4 +1,5 @@
 from datetime import datetime
+from os import stat
 from typing import Any, Dict
 from pymongo.errors import PyMongoError
 from motor.motor_asyncio import AsyncIOMotorCollection
@@ -7,6 +8,7 @@ from app.core.exception.warg_exception import WargException
 from app.models.errors import Error
 from app.models.organization import OrganizationReq, OrganizationRes
 from app.repositories.organization_crud import OrganizationCrud
+from bson.objectid import ObjectId
 
 
 class Organization:
@@ -19,12 +21,31 @@ class Organization:
             _data["creationTime"] = datetime.utcnow()
             _data["lastModifiedTime"] = _data["creationTime"]
             _data["version"] = "1"
-            _document = await OrganizationCrud(self._collection).create(data=_data)
-            _data["organizationId"] = str(_document.inserted_id)
+            _resource = await OrganizationCrud(self._collection).create(data=_data)
+            _data["organizationId"] = str(_resource.inserted_id)
             return OrganizationRes(**_data)
         except PyMongoError as exc:
             raise WargException(
                 status_code=503,
                 error=ExceptionCatalogue.MONGO_DB_ERROR,
-                error_deails=str(exc),
+                error_details=str(exc),
+            )
+
+    async def read_specific(self, org_id: str) -> OrganizationRes:
+        try:
+            _resource = await OrganizationCrud(self._collection).read_specific(
+                data={"_id": ObjectId(org_id)}
+            )
+            if _resource:
+                return OrganizationRes(**_resource)
+            raise WargException(
+                status_code=404,
+                error=ExceptionCatalogue.NO_RESOURCE_ERROR,
+                error_details=f"No Organization exists with id {org_id}",
+            )
+        except PyMongoError as exc:
+            raise WargException(
+                status_code=503,
+                error=ExceptionCatalogue.MONGO_DB_ERROR,
+                error_details=str(exc),
             )

@@ -14,8 +14,13 @@ class BaseCrud(ABC):
     async def create(self, data: Dict[Any, Any]):
         return await self._collection.insert_one(data)
 
-    async def read_specific(self, data):
+    async def read_specific(self, data: Dict[Any, Any]):
         resource = await self._collection.find_one(data)
         if resource:
             return json.loads(json.dumps(resource, cls=MongoDbOrganizaionEncoder))
 
+    async def read_all(self):
+        resources = []
+        async for resource in self._collection.find():
+            resources.append(json.loads(json.dumps(resource, cls=MongoDbOrganizaionEncoder)))
+        return resources

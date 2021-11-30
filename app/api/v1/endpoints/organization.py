@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from datetime import datetime
-
+from typing import List
 from motor.motor_asyncio import AsyncIOMotorCollection
 from starlette import responses
 from app.models.organization import OrganizationReq, OrganizationRes
@@ -39,4 +39,17 @@ async def get_organization(
     response: OrganizationRes = await Organization(collection).read_specific(
         org_id=organizationId
     )
+    return response
+
+
+@router.get(
+    "/",
+    status_code=200,
+    response_model=List[OrganizationRes],
+    summary="Retrieve deails of organizations",
+    description="Get details of organizations",
+    response_model_by_alias=False,
+)
+async def get_organizations(collection: AsyncIOMotorCollection = Depends(get_db)):
+    response: List[OrganizationRes] = await Organization(collection).read()
     return response

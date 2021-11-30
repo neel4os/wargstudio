@@ -1,6 +1,6 @@
 from datetime import datetime
 from os import stat
-from typing import Any, Dict
+from typing import Any, Dict, List
 from pymongo.errors import PyMongoError
 from motor.motor_asyncio import AsyncIOMotorCollection
 from app.core.exception.exception_catalogue import ExceptionCatalogue
@@ -44,6 +44,18 @@ class Organization:
                 error=ExceptionCatalogue.NO_RESOURCE_ERROR,
                 error_details=f"No Organization exists with id {org_id}",
             )
+        except PyMongoError as exc:
+            raise WargException(
+                status_code=503,
+                error=ExceptionCatalogue.MONGO_DB_ERROR,
+                error_details=str(exc),
+            )
+
+    async def read(self) -> List[OrganizationRes]:
+        try:
+            _resources = await OrganizationCrud(self._collection).read_all()
+            if _resources:
+                return [OrganizationRes(**_resource) for _resource in _resources]
         except PyMongoError as exc:
             raise WargException(
                 status_code=503,

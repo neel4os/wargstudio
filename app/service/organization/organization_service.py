@@ -23,6 +23,7 @@ class Organization:
             _data["version"] = "1"
             _resource = await OrganizationCrud(self._collection).create(data=_data)
             _data["organizationId"] = str(_resource.inserted_id)
+            _data.pop("_id")
             return OrganizationRes(**_data)
         except PyMongoError as exc:
             raise WargException(

@@ -6,7 +6,7 @@ from motor.motor_asyncio import AsyncIOMotorCollection
 from app.core.exception.exception_catalogue import ExceptionCatalogue
 from app.core.exception.warg_exception import WargException
 from app.models.errors import Error
-from app.models.organization import OrganizationReq, OrganizationRes
+from app.models.organization import OrganizationReq, OrganizationRes, ListOrganization
 from app.repositories.organization_crud import OrganizationCrud
 from bson.objectid import ObjectId
 
@@ -51,11 +51,15 @@ class Organization:
                 error_details=str(exc),
             )
 
-    async def read(self) -> List[OrganizationRes]:
+    async def read(self) -> ListOrganization:
         try:
             _resources = await OrganizationCrud(self._collection).read_all()
             if _resources:
-                return [OrganizationRes(**_resource) for _resource in _resources]
+                return ListOrganization(
+                    organizations=[
+                        OrganizationRes(**_resource) for _resource in _resources
+                    ]
+                )
         except PyMongoError as exc:
             raise WargException(
                 status_code=503,

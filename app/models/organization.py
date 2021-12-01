@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel
 from pydantic.fields import Field
 from datetime import datetime
@@ -30,5 +30,12 @@ class OrganizationRes(OrganizationReq):
     class Config:
         extra = "ignore"
         allow_population_by_field_name = True
-        # fields = {"_id": "organizationId"}
+
+
+class ListOrganization(BaseModel):
+    """
+    Response model for API response of All Organization
+    """
+
+    organizations: List[OrganizationRes]
 

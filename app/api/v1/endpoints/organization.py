@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List
 from motor.motor_asyncio import AsyncIOMotorCollection
 from starlette import responses
-from app.models.organization import OrganizationReq, OrganizationRes
+from app.models.organization import ListOrganization, OrganizationReq, OrganizationRes
 from app.api.deps import get_db
 from app.repositories.organization_crud import OrganizationCrud
 from app.service.organization.organization_service import Organization
@@ -45,11 +45,11 @@ async def get_organization(
 @router.get(
     "/",
     status_code=200,
-    response_model=List[OrganizationRes],
+    response_model=ListOrganization,
     summary="Retrieve deails of organizations",
     description="Get details of organizations",
     response_model_by_alias=False,
 )
 async def get_organizations(collection: AsyncIOMotorCollection = Depends(get_db)):
-    response: List[OrganizationRes] = await Organization(collection).read()
+    response: ListOrganization = await Organization(collection).read()
     return response

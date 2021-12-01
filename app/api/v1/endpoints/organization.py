@@ -53,3 +53,16 @@ async def get_organization(
 async def get_organizations(collection: AsyncIOMotorCollection = Depends(get_db)):
     response: ListOrganization = await Organization(collection).read()
     return response
+
+
+@router.delete(
+    "/",
+    status_code=204,
+    summary="Delete an Organization",
+    description="Delete an organization defined by id",
+)
+async def delete_organization(
+    organizationId, collection: AsyncIOMotorCollection = Depends(get_db)
+):
+    resoures = await Organization(collection).delete(organizationId)
+    return resoures

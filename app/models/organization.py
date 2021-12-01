@@ -37,5 +37,7 @@ class ListOrganization(BaseModel):
     Response model for API response of All Organization
     """
 
-    organizations: List[OrganizationRes]
+    organizations: List[OrganizationRes] = Field(
+        ..., description="List of Organizations"
+    )
 

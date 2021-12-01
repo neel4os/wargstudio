@@ -66,3 +66,21 @@ class Organization:
                 error=ExceptionCatalogue.MONGO_DB_ERROR,
                 error_details=str(exc),
             )
+
+    async def delete(self, org_id) -> None:
+        try:
+            _resources = await OrganizationCrud(self._collection).delete(
+                {"_id": ObjectId(org_id)}
+            )
+            if not _resources:
+                raise WargException(
+                    status_code=404,
+                    error=ExceptionCatalogue.NO_RESOURCE_ERROR,
+                    error_details=f"No Organization exists with id {org_id}",
+                )
+        except PyMongoError as exc:
+            raise WargException(
+                status_code=503,
+                error=ExceptionCatalogue.MONGO_DB_ERROR,
+                error_details=str(exc),
+            )

@@ -33,9 +33,5 @@ class BaseCrud(ABC):
             await self._collection.delete_one(data)
             return True
 
-    async def update(self, filter_cond, field, value):
-        resource = await self._collection.update_one(
-            filter_cond, {"$push": {field: value}}
-        )
-        if resource:
-            return resource
+    async def update(self, filter_cond: Dict[Any, Any], data: Dict[Any, Any]):
+        await self._collection.update_one(filter_cond, {"$set": data}, upsert=False)

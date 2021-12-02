@@ -1,12 +1,16 @@
-from fastapi import APIRouter, Depends
 from datetime import datetime
 from typing import List
-from motor.motor_asyncio import AsyncIOMotorCollection
-from starlette import responses
-from app.models.organization import ListOrganization, OrganizationReq, OrganizationRes
+
 from app.api.deps import get_db
+from app.models.organization import (
+    ListOrganization,
+    OrganizationReq,
+    OrganizationRes,
+)
 from app.repositories.organization_crud import OrganizationCrud
 from app.service.organization.organization_service import Organization
+from fastapi import APIRouter, Depends
+from motor.motor_asyncio import AsyncIOMotorCollection
 
 router: APIRouter = APIRouter()
 
@@ -56,7 +60,7 @@ async def get_organizations(collection: AsyncIOMotorCollection = Depends(get_db)
 
 
 @router.delete(
-    "/",
+    "/{organizationId}",
     status_code=204,
     summary="Delete an Organization",
     description="Delete an organization defined by id",
@@ -66,3 +70,18 @@ async def delete_organization(
 ):
     resoures = await Organization(collection).delete(organizationId)
     return resoures
+
+
+@router.patch(
+    "/{organizationId}",
+    status_code=200,
+    summary="update an organization",
+    description="update an organization based on id",
+)
+async def update_orgnization(
+    org_in: OrganizationReq,
+    organizationId,
+    collection: AsyncIOMotorCollection = Depends(get_db),
+):
+    resouces = await Organization(collection).update(org_in, organizationId)
+    return resouces

@@ -84,3 +84,22 @@ class Organization:
                 error=ExceptionCatalogue.MONGO_DB_ERROR,
                 error_details=str(exc),
             )
+
+    async def update(self, org_in, org_id) -> OrganizationRes:
+        try:
+            _resource = await self.read_specific(org_id)
+            _data = org_in.dict(exclude_defaults=True)
+            _data["version"] = str(int(_resource.version) + 1)
+            from devtools import debug
+
+            debug(_data)
+            await OrganizationCrud(self._collection).update(
+                filter_cond={"_id": ObjectId(org_id)}, data=_data
+            )
+            return await self.read_specific(org_id)
+        except PyMongoError as exc:
+            raise WargException(
+                status_code=503,
+                error=ExceptionCatalogue.MONGO_DB_ERROR,
+                error_details=str(exc),
+            )

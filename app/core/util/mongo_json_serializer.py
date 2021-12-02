@@ -1,7 +1,6 @@
 import json
 import datetime
 from bson import ObjectId
-from pydantic.utils import Obj
 
 
 class MongoDbOrganizaionEncoder(json.JSONEncoder):

@@ -12,7 +12,9 @@ class DbSession(metaclass=Singleton):
     def __init__(self) -> None:
         self._db_url: str = _setting.DbURL
         self._client: AsyncIOMotorClient = AsyncIOMotorClient(self._db_url)
-        self._database: AsyncIOMotorDatabase = self._client[_setting.Database_name]
+        self._database: AsyncIOMotorDatabase = self._client[
+            _setting.Database_name
+        ]
         self._collection: AsyncIOMotorCollection = self._database[
             _setting.Collection_name
         ]

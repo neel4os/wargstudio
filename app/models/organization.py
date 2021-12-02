@@ -10,7 +10,9 @@ class OrganizationReq(BaseModel):
     """
 
     name: Optional[str] = Field("", description="name of organisation")
-    description: Optional[str] = Field("", description="description of organization")
+    description: Optional[str] = Field(
+        "", description="description of organization"
+    )
 
 
 class OrganizationRes(OrganizationReq):
@@ -21,7 +23,9 @@ class OrganizationRes(OrganizationReq):
     organizationId: str = Field(
         ..., description="UUID of the Organization", alias="_id"
     )
-    creationTime: datetime = Field(..., description="Creattion time of Organization")
+    creationTime: datetime = Field(
+        ..., description="Creattion time of Organization"
+    )
     lastModifiedTime: datetime = Field(
         ..., description="last modified time of Organization"
     )
@@ -40,4 +44,3 @@ class ListOrganization(BaseModel):
     organizations: List[OrganizationRes] = Field(
         ..., description="List of Organizations"
     )
-

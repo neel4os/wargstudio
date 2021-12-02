@@ -21,4 +21,6 @@ async def global_exception_middleware(request: Request, call_next):
 
 
 async def warg_exception_handler(request: Request, exc: WargException):
-    return JSONResponse(status_code=exc._status_code, content=exc._model.dict(),)
+    return JSONResponse(
+        status_code=exc._status_code, content=exc._model.dict(),
+    )

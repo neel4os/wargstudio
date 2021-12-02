@@ -1,13 +1,9 @@
-from datetime import datetime
-from typing import List
-
 from app.api.deps import get_db
 from app.models.organization import (
     ListOrganization,
     OrganizationReq,
     OrganizationRes,
 )
-from app.repositories.organization_crud import OrganizationCrud
 from app.service.organization.organization_service import Organization
 from fastapi import APIRouter, Depends
 from motor.motor_asyncio import AsyncIOMotorCollection
@@ -23,9 +19,12 @@ router: APIRouter = APIRouter()
     description="Post request to create an organization",
 )
 async def create_organization(
-    org_in: OrganizationReq, collection: AsyncIOMotorCollection = Depends(get_db)
+    org_in: OrganizationReq,
+    collection: AsyncIOMotorCollection = Depends(get_db),
 ):
-    response: OrganizationRes = await Organization(collection).create(org_in)
+    response: OrganizationRes = await Organization(collection).create(
+        org_in
+    )
     return response
 
 
@@ -38,11 +37,12 @@ async def create_organization(
     response_model_by_alias=False,
 )
 async def get_organization(
-    organizationId: str, collection: AsyncIOMotorCollection = Depends(get_db)
+    organizationId: str,
+    collection: AsyncIOMotorCollection = Depends(get_db),
 ):
-    response: OrganizationRes = await Organization(collection).read_specific(
-        org_id=organizationId
-    )
+    response: OrganizationRes = await Organization(
+        collection
+    ).read_specific(org_id=organizationId)
     return response
 
 
@@ -54,7 +54,9 @@ async def get_organization(
     description="Get details of organizations",
     response_model_by_alias=False,
 )
-async def get_organizations(collection: AsyncIOMotorCollection = Depends(get_db)):
+async def get_organizations(
+    collection: AsyncIOMotorCollection = Depends(get_db),
+):
     response: ListOrganization = await Organization(collection).read()
     return response
 
@@ -83,5 +85,7 @@ async def update_orgnization(
     organizationId,
     collection: AsyncIOMotorCollection = Depends(get_db),
 ):
-    resouces = await Organization(collection).update(org_in, organizationId)
+    resouces = await Organization(collection).update(
+        org_in, organizationId
+    )
     return resouces

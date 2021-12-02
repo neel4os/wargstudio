@@ -1,12 +1,13 @@
 from datetime import datetime
-from os import stat
-from typing import Any, Dict, List
 from pymongo.errors import PyMongoError
 from motor.motor_asyncio import AsyncIOMotorCollection
 from app.core.exception.exception_catalogue import ExceptionCatalogue
 from app.core.exception.warg_exception import WargException
-from app.models.errors import Error
-from app.models.organization import OrganizationReq, OrganizationRes, ListOrganization
+from app.models.organization import (
+    OrganizationReq,
+    OrganizationRes,
+    ListOrganization,
+)
 from app.repositories.organization_crud import OrganizationCrud
 from bson.objectid import ObjectId
 
@@ -21,7 +22,9 @@ class Organization:
             _data["creationTime"] = datetime.utcnow()
             _data["lastModifiedTime"] = _data["creationTime"]
             _data["version"] = "1"
-            _resource = await OrganizationCrud(self._collection).create(data=_data)
+            _resource = await OrganizationCrud(self._collection).create(
+                data=_data
+            )
             _data["organizationId"] = str(_resource.inserted_id)
             _data.pop("_id")
             return OrganizationRes(**_data)
@@ -34,9 +37,9 @@ class Organization:
 
     async def read_specific(self, org_id: str) -> OrganizationRes:
         try:
-            _resource = await OrganizationCrud(self._collection).read_specific(
-                data={"_id": ObjectId(org_id)}
-            )
+            _resource = await OrganizationCrud(
+                self._collection
+            ).read_specific(data={"_id": ObjectId(org_id)})
             if _resource:
                 return OrganizationRes(**_resource)
             raise WargException(
@@ -57,7 +60,8 @@ class Organization:
             if _resources:
                 return ListOrganization(
                     organizations=[
-                        OrganizationRes(**_resource) for _resource in _resources
+                        OrganizationRes(**_resource)
+                        for _resource in _resources
                     ]
                 )
         except PyMongoError as exc:

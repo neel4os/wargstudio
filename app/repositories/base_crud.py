@@ -1,7 +1,6 @@
 from abc import ABC
 from typing import Any, Dict
 from motor.motor_asyncio import AsyncIOMotorCollection
-from bson import json_util
 import json
 
 from app.core.util.mongo_json_serializer import MongoDbOrganizaionEncoder
@@ -17,13 +16,17 @@ class BaseCrud(ABC):
     async def read_specific(self, data: Dict[Any, Any]):
         resource = await self._collection.find_one(data)
         if resource:
-            return json.loads(json.dumps(resource, cls=MongoDbOrganizaionEncoder))
+            return json.loads(
+                json.dumps(resource, cls=MongoDbOrganizaionEncoder)
+            )
 
     async def read_all(self):
         resources = []
         async for resource in self._collection.find():
             resources.append(
-                json.loads(json.dumps(resource, cls=MongoDbOrganizaionEncoder))
+                json.loads(
+                    json.dumps(resource, cls=MongoDbOrganizaionEncoder)
+                )
             )
         return resources
 
@@ -34,4 +37,6 @@ class BaseCrud(ABC):
             return True
 
     async def update(self, filter_cond: Dict[Any, Any], data: Dict[Any, Any]):
-        await self._collection.update_one(filter_cond, {"$set": data}, upsert=False)
+        await self._collection.update_one(
+            filter_cond, {"$set": data}, upsert=False
+        )

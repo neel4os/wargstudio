@@ -56,7 +56,9 @@ class Organization:
 
     async def read(self) -> ListOrganization:
         try:
-            _resources = await OrganizationCrud(self._collection).read_all()
+            _resources = await OrganizationCrud(
+                self._collection
+            ).read_all()
             if _resources:
                 return ListOrganization(
                     organizations=[
@@ -94,6 +96,7 @@ class Organization:
             _resource = await self.read_specific(org_id)
             _data = org_in.dict(exclude_defaults=True)
             _data["version"] = str(int(_resource.version) + 1)
+            _data["lastModifiedTime"] = datetime.utcnow()
             from devtools import debug
 
             debug(_data)

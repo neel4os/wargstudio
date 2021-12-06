@@ -3,6 +3,8 @@ from pydantic import BaseModel
 from pydantic.fields import Field
 from datetime import datetime
 
+from app.models.workspace import WorkspaceModel
+
 
 class OrganizationReq(BaseModel):
     """
@@ -44,3 +46,7 @@ class ListOrganization(BaseModel):
     organizations: List[OrganizationRes] = Field(
         ..., description="List of Organizations"
     )
+
+
+class OrganizationModel(OrganizationRes):
+    workspaces: List[WorkspaceModel] = Field(default=[])

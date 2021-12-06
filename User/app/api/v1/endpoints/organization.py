@@ -4,7 +4,7 @@ from app.models.organization import (
     OrganizationReq,
     OrganizationRes,
 )
-from app.service.organization.organization_service import Organization
+from app.service.organization_service import Organization
 from fastapi import APIRouter, Depends
 from motor.motor_asyncio import AsyncIOMotorCollection
 

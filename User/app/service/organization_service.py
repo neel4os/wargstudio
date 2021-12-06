@@ -22,6 +22,7 @@ class Organization:
             _data["creationTime"] = datetime.utcnow()
             _data["lastModifiedTime"] = _data["creationTime"]
             _data["version"] = "1"
+            _data["workspaces"] = []
             _resource = await OrganizationCrud(self._collection).create(
                 data=_data
             )
@@ -97,9 +98,6 @@ class Organization:
             _data = org_in.dict(exclude_defaults=True)
             _data["version"] = str(int(_resource.version) + 1)
             _data["lastModifiedTime"] = datetime.utcnow()
-            from devtools import debug
-
-            debug(_data)
             await OrganizationCrud(self._collection).update(
                 filter_cond={"_id": ObjectId(org_id)}, data=_data
             )

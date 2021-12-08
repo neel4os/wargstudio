@@ -35,12 +35,10 @@ async def create_workspace(
     response_model_by_alias=False,
 )
 async def get_workspace(
-    organizationID: str,
-    workspaceId: str,
-    collection: AsyncIOMotorCollection = Depends(get_db),
+    workspaceId: str, collection: AsyncIOMotorCollection = Depends(get_db),
 ):
     response: WorkspaceRes = await Workspace(collection).read_specific(
-        org_id=workspaceId
+        workspaceId
     )
     return response
 
@@ -78,11 +76,11 @@ async def delete_workspace(
     status_code=200,
     summary="update an workspace",
     description="update an workspace based on id",
+    deprecated=True,
 )
 async def update_orgnization(
     org_in: WorkspaceReq,
     workspaceId,
     collection: AsyncIOMotorCollection = Depends(get_db),
 ):
-    resouces = await Workspace(collection).update(org_in, workspaceId)
-    return resouces
+    raise NotImplementedError("Coming Soon")

@@ -2,6 +2,7 @@ from datetime import datetime
 from pydantic.types import UUID4
 from pymongo.errors import PyMongoError
 from motor.motor_asyncio import AsyncIOMotorCollection
+from app.repositories.organization_crud import OrganizationCrud
 from app.core.exception.exception_catalogue import ExceptionCatalogue
 from app.core.exception.warg_exception import WargException
 from app.models.workspace import (
@@ -26,7 +27,7 @@ class Workspace:
             _data["version"] = "1"
             _data["workspaceId"] = str(uuid4()).replace("-", "")
             _resource = await WorkspaceCrud(
-                self._collection, org_id=ObjectId(self._org_id)
+                self._collection, org_id=ObjectId(_data["organizationId"])
             ).create(data=_data)
             _return_data = [
                 elem
@@ -41,13 +42,18 @@ class Workspace:
                 error_details=str(exc),
             )
 
-    async def read_specific(self, org_id: str, ws_id: str) -> WorkspaceRes:
+    async def read_specific(self, ws_id: str) -> WorkspaceRes:
         try:
             _resource = await WorkspaceCrud(
                 self._collection
-            ).read_specific(data={"_id": ObjectId(ws_id)})
+            ).read_specific(data={"workspaceId": ws_id})
             if _resource:
-                return WorkspaceRes(**_resource)
+                _return_data = [
+                    elem
+                    for elem in _resource["workspaces"]
+                    if elem["workspaceId"] == ws_id
+                ][0]
+                return WorkspaceRes(**_return_data)
             raise WargException(
                 status_code=404,
                 error=ExceptionCatalogue.NO_RESOURCE_ERROR,
@@ -62,12 +68,18 @@ class Workspace:
 
     async def read(self) -> ListWorkspace:
         try:
-            _resources = await WorkspaceCrud(self._collection).read_all()
+            _resources = await OrganizationCrud(
+                self._collection
+            ).read_all()
+            _workspace_resource = []
             if _resources:
+                for org in _resources:
+                    _workspace_resource = (
+                        _workspace_resource + org["workspaces"]
+                    )
                 return ListWorkspace(
                     workspaces=[
-                        WorkspaceRes(**_resource)
-                        for _resource in _resources
+                        WorkspaceRes(**res) for res in _workspace_resource
                     ]
                 )
         except PyMongoError as exc:
@@ -80,7 +92,7 @@ class Workspace:
     async def delete(self, ws_id) -> None:
         try:
             _resources = await WorkspaceCrud(self._collection).delete(
-                {"_id": ObjectId(ws_id)}
+                ws_id
             )
             if not _resources:
                 raise WargException(

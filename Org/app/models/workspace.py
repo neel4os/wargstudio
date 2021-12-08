@@ -24,7 +24,7 @@ class WorkspaceRes(WorkspaceReq):
     """
 
     workspaceId: str = Field(
-        ..., description="UUID of the Workspace", alias="_id"
+        ..., description="UUID of the Workspace",
     )
     creationTime: datetime = Field(
         ..., description="Creattion time of Workspace"
@@ -44,7 +44,7 @@ class ListWorkspace(BaseModel):
     Response model for API response of All Workspace
     """
 
-    Workspaces: List[WorkspaceRes] = Field(
+    workspaces: List[WorkspaceRes] = Field(
         ..., description="List of Workspaces"
     )
 

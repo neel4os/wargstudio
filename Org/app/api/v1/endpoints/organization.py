@@ -4,7 +4,7 @@ from app.models.organization import (
     OrganizationReq,
     OrganizationRes,
 )
-from app.service.organization.organization_service import Organization
+from app.service.organization_service import Organization
 from fastapi import APIRouter, Depends
 from motor.motor_asyncio import AsyncIOMotorCollection
 
@@ -17,6 +17,7 @@ router: APIRouter = APIRouter()
     response_model=OrganizationRes,
     summary="Create an Organization",
     description="Post request to create an organization",
+    response_model_by_alias=False,
 )
 async def create_organization(
     org_in: OrganizationReq,

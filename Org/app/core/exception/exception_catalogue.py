@@ -9,3 +9,4 @@ class ExceptionCatalogue:
     NO_RESOURCE_ERROR = Error(
         error_code="WARG_002", error_message="NO resource found"
     )
+    VALIDATION_ERROR = Error(error_code="WARG_003", error_message="Validation Failed")

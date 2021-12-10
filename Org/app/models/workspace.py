@@ -3,6 +3,8 @@ from pydantic import BaseModel
 from pydantic.fields import Field
 from datetime import datetime
 
+from app.models.experiment import ExperimentResponse
+
 
 class WorkspaceReq(BaseModel):
     """
@@ -50,4 +52,5 @@ class ListWorkspace(BaseModel):
 
 
 class WorkspaceModel(WorkspaceRes):
-    pass
+    experiments: List[ExperimentResponse] = Field(default=[])
+

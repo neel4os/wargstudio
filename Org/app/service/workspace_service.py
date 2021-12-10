@@ -26,6 +26,7 @@ class Workspace:
             _data["lastModifiedTime"] = _data["creationTime"]
             _data["version"] = "1"
             _data["workspaceId"] = str(uuid4()).replace("-", "")
+            _data["experiments"] = []
             _resource = await WorkspaceCrud(
                 self._collection, org_id=ObjectId(_data["organizationId"])
             ).create(data=_data)

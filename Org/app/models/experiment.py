@@ -31,7 +31,7 @@ class ExperimentRequest(BaseModel):
         ExperimentConfig(),
         description="configuration for verification of experimentJson",
     )
-    workspaceId: str
+    workspaceId: str = Field(..., description="id of parent workspace")
 
     @validator("experiment")
     def is_experimentJson_valid(cls, val):
@@ -62,11 +62,18 @@ class ExperimentRequest(BaseModel):
             )
 
 
-class ExperimentResponse(ExperimentRequest):
+class ExperimentResponse(BaseModel):
     """
     Experiment Model Response
     """
 
+    experiment_name: str = Field(
+        ..., description="Title of experiment from experiment payload"
+    )
+    experiment_description: str = Field(
+        ...,
+        description="Description of experiment from experiment payload",
+    )
     experimentId: str = Field(..., description="Id of the experiment")
     workspaceId: str = Field(
         ..., description="UUID of the Workspace",

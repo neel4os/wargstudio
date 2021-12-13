@@ -44,7 +44,7 @@ class ListOrganization(BaseModel):
     """
 
     organizations: List[OrganizationRes] = Field(
-        ..., description="List of Organizations"
+        [], description="List of Organizations"
     )
 
 

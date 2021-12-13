@@ -53,4 +53,3 @@ class ListWorkspace(BaseModel):
 
 class WorkspaceModel(WorkspaceRes):
     experiments: List[ExperimentResponse] = Field(default=[])
-

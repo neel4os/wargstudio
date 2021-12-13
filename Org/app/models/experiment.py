@@ -54,7 +54,7 @@ class ExperimentRequest(BaseModel):
                 ExperimentConfig(**val.get("config"))
                 return val
             return val
-        except ValidationError as exc:
+        except ValidationError:
             raise WargException(
                 status_code=422,
                 error=ExceptionCatalogue.VALIDATION_ERROR,

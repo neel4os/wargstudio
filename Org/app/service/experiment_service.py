@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import IO
 from uuid import uuid4
 from app.core.util.error_decorator import MongoErrorHandler
 from app.models.experiment import ExperimentRequest, ExperimentResponse
@@ -8,7 +7,6 @@ from app.repositories.minio_operation import MinioOperation
 from app.service.workspace_service import Workspace
 from bson.objectid import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection
-from pymongo.errors import PyMongoError
 
 
 class Experiment:

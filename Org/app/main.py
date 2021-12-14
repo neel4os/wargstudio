@@ -8,7 +8,9 @@ from app.core.exception.excepion_handler import (
 from app.core.exception.warg_exception import WargException
 
 
-app: FastAPI = FastAPI(title=_setting.title, description=_setting.description)
+app: FastAPI = FastAPI(
+    title=_setting.title, description=_setting.description
+)
 
 app.include_router(api_router)
 app.middleware("http")(global_exception_middleware)

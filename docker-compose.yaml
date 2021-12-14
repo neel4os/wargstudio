@@ -1,6 +1,24 @@
 version: '3'
-
 services:
+  mongo:
+    image: mongo:4.4.10
+    container_name: mongodb
+    # ports:
+    #   - "27017:27017"
+    networks:
+      - wargstudio
+
+  org:
+    image: org:0.1
+    container_name: org
+    # ports:
+    #   - "3000:80"
+    networks:
+      - wargstudio
+    environment:
+      - DbURL=mongodb://mongo:27017
+    depends_on:
+      - mongo
 
   kong-database:
     image: postgres:9.6
@@ -12,7 +30,7 @@ services:
       - POSTGRES_DB=kong
       - POSTGRES_PASSWORD=kong
     networks:
-      - kong-net
+      - wargstudio
     volumes:
       - "db-data-kong-postgres:/var/lib/postgresql/data"
 
@@ -26,7 +44,7 @@ services:
     command: kong migrations bootstrap
     restart: on-failure
     networks:
-      - kong-net
+      - wargstudio
     depends_on:
       - kong-database
 
@@ -55,14 +73,26 @@ services:
     links:
       - kong-database:kong-database
     networks:
-      - kong-net
+      - wargstudio
     depends_on:
       - kong-migrations
+
+  konga:
+    image: pantsel/konga
+    ports:
+      - 1337:1337
+    links:
+      - kong:kong
+    container_name: konga
+    environment:
+      - NODE_ENV=production
+    networks:
+      - wargstudio
 
 volumes:
   db-data-kong-postgres:
 
     null
 networks:
-  kong-net:
+  wargstudio:
     external: false

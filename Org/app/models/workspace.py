@@ -47,7 +47,7 @@ class ListWorkspace(BaseModel):
     """
 
     workspaces: List[WorkspaceRes] = Field(
-        ..., description="List of Workspaces"
+        [], description="List of Workspaces"
     )
 
 

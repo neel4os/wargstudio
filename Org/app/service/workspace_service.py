@@ -79,6 +79,8 @@ class Workspace:
                         WorkspaceRes(**res) for res in _workspace_resource
                     ]
                 )
+            else:
+                return ListWorkspace()
         except PyMongoError as exc:
             raise WargException(
                 status_code=503,

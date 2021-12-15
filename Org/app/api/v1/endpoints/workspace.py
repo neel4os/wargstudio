@@ -5,7 +5,7 @@ from app.models.workspace import (
     WorkspaceRes,
 )
 from app.service.workspace_service import Workspace
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from motor.motor_asyncio import AsyncIOMotorCollection
 
 router: APIRouter = APIRouter()
@@ -67,8 +67,8 @@ async def get_workspaces(
 async def delete_workspace(
     workspaceId, collection: AsyncIOMotorCollection = Depends(get_db)
 ):
-    resoures = await Workspace(collection).delete(workspaceId)
-    return resoures
+    await Workspace(collection).delete(workspaceId)
+    return Response(status_code=204)
 
 
 @router.patch(

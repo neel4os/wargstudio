@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 from chaoslib.exceptions import ChaosException
 from pydantic import BaseModel, validator, root_validator
 from pydantic.error_wrappers import ValidationError
@@ -89,4 +89,13 @@ class ExperimentResponse(BaseModel):
     class Config:
         extra = "ignore"
         allow_population_by_field_name = True
+
+
+class ListExperiment(BaseModel):
+    """
+    Response model for API response of All Experiments
+    """
+    experiments: List[ExperimentResponse] = Field(
+        default=[], description="LIst of all experiments"
+    )
 

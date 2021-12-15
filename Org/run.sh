@@ -1,4 +1,4 @@
-docker-compose up
+docker-compose up -d
 export DbURL="mongodb://localhost:27017"
 export storageUrl="localhost:9000"
 export storageAccessKey="admin"

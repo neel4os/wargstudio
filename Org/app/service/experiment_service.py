@@ -8,6 +8,7 @@ from app.models.experiment import (
     ExperimentResponse,
     ListExperiment,
 )
+from app.models.workspace import WorkspaceRes
 from app.repositories.experiment_crud import ExperimentCrud
 from app.repositories.minio_operation import MinioOperation
 from app.service.workspace_service import Workspace
@@ -24,15 +25,19 @@ class Experiment:
     async def create(
         self, experiment_in: ExperimentRequest
     ) -> ExperimentResponse:
+        _ws_details: WorkspaceRes = await Workspace(
+            self._connection
+        ).read_specific(experiment_in.workspaceId)
         _data = experiment_in.dict()
         _data["creationTime"] = datetime.utcnow()
-        _data["lastModifiedTime"] = _data["creationTime"]
-        _data["version"] = "1"
+        # _data["lastModifiedTime"] = _data["creationTime"]
+        # _data["version"] = "1"
         _data["experimentId"] = str(uuid4()).replace("-", "")
         _data["experiment_name"] = _data["experiment"]["title"]
         _data["experiment_description"] = _data["experiment"][
             "description"
         ]
+        _data["organizationId"] = _ws_details.organizationId
         workspace_details = await Workspace(
             self._connection
         ).read_specific(_data["workspaceId"])
@@ -65,19 +70,34 @@ class Experiment:
             return ListExperiment()
 
     @MongoErrorHandler
-    async def read_specific(self, experimentId: str):
+    async def read_specific(self, experimentId: str) -> ExperimentResponse:
         _response = await self.read()
         list_experiments = _response.experiments
         if list_experiments:
-            _exp_resp = [
-                _resp
-                for _resp in list_experiments
-                if _resp.experimentId == experimentId
-            ][0]
-            return _exp_resp
+            try:
+                _exp_resp = [
+                    _resp
+                    for _resp in list_experiments
+                    if _resp.experimentId == experimentId
+                ][0]
+                return _exp_resp
+            except IndexError:
+                raise WargException(
+                    status_code=404,
+                    error=ExceptionCatalogue.NO_RESOURCE_ERROR,
+                    error_details=f"No Experiment exists with id {experimentId}",
+                )
+
         raise WargException(
             status_code=404,
             error=ExceptionCatalogue.NO_RESOURCE_ERROR,
-            error_details=f"No Workspace exists with id {experimentId}",
+            error_details=f"No Experiment exists with id {experimentId}",
         )
+
+    @MongoErrorHandler
+    async def delete(self, experimentId) -> None:
+        exp_details: ExperimentResponse = await self.read_specific(
+            experimentId
+        )
+        await ExperimentCrud(self._connection).delete(exp_details)
 

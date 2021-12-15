@@ -76,15 +76,16 @@ class ExperimentResponse(BaseModel):
     )
     experimentId: str = Field(..., description="Id of the experiment")
     workspaceId: str = Field(
-        ..., description="UUID of the Workspace",
+        ..., description="Id of the workspace that the experiment belongs",
     )
+    organizationId: str = Field(..., description="Id of the organizaton that the experiment belongs")
     creationTime: datetime = Field(
-        ..., description="Creattion time of Workspace"
+        ..., description="Creattion time of Experiment"
     )
-    lastModifiedTime: datetime = Field(
-        ..., description="last modified time of Workspace"
-    )
-    version: str = Field(..., description="Version of the Workspace")
+    # lastModifiedTime: datetime = Field(
+    #     ..., description="last modified time of Experiment"
+    # )
+    # version: str = Field(..., description="Version of the Experiment")
 
     class Config:
         extra = "ignore"

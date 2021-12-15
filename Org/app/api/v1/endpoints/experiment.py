@@ -1,5 +1,5 @@
 from app.api.deps import get_db
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from motor.motor_asyncio import AsyncIOMotorCollection
 from app.models.experiment import (
     ExperimentRequest,
@@ -59,3 +59,17 @@ async def get_experiments(
         collection
     ).read_specific(experimentId=experimentId)
     return response
+
+
+@router.delete(
+    "/{experimentId}",
+    status_code=204,
+    summary="Delete an Experiment",
+    description="Delete an experiment defined by id",
+)
+async def delete_experiment(
+    experimentId, collection: AsyncIOMotorCollection = Depends(get_db)
+):
+    await Experiment(collection).delete(experimentId)
+    return Response(status_code=204)
+

@@ -5,7 +5,7 @@ from app.models.organization import (
     OrganizationRes,
 )
 from app.service.organization_service import Organization
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from motor.motor_asyncio import AsyncIOMotorCollection
 
 router: APIRouter = APIRouter()
@@ -71,8 +71,8 @@ async def get_organizations(
 async def delete_organization(
     organizationId, collection: AsyncIOMotorCollection = Depends(get_db)
 ):
-    resoures = await Organization(collection).delete(organizationId)
-    return resoures
+    await Organization(collection).delete(organizationId)
+    return Response(status_code=204)
 
 
 @router.patch(

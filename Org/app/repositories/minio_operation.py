@@ -35,3 +35,15 @@ class MinioOperation:
             part_size=10 * 1024 * 1024,
         )
 
+    @MinioErrorHandler
+    def get_all_object_bucket(self, bucket_name):
+        self._objects = self._client.list_objects(
+            bucket_name, prefix="definition", recursive=True
+        )
+
+    @MinioErrorHandler
+    def delete_bucket(self, bucket_name):
+        self.get_all_object_bucket(bucket_name)
+        for obj in self._objects:
+            self._client.remove_object(bucket_name, obj.object_name)
+        self._client.remove_bucket(bucket_name)

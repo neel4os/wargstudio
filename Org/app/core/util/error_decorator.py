@@ -1,6 +1,6 @@
 from functools import wraps
 from pymongo.errors import PyMongoError
-
+import traceback
 from app.core.exception.exception_catalogue import ExceptionCatalogue
 from app.core.exception.warg_exception import WargException
 
@@ -26,6 +26,7 @@ def MinioErrorHandler(func):
         try:
             return func(self, *args, **kwargs)
         except Exception as exc:
+            print(traceback.format_exc(), sep="\n")
             raise WargException(
                 status_code=503,
                 error=ExceptionCatalogue.STORAGE_ERROR,

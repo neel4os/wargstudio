@@ -100,4 +100,5 @@ class Experiment:
             experimentId
         )
         await ExperimentCrud(self._connection).delete(exp_details)
+        MinioOperation().delete_bucket(experimentId)
 

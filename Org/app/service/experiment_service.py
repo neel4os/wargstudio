@@ -46,7 +46,7 @@ class Experiment:
             org_id=ObjectId(workspace_details.organizationId),
         ).create(_data)
         MinioOperation().upload_experiment(
-            _data["experimentId"], _data["experiment"]
+            _data
         )
         return ExperimentResponse(**_data)
 

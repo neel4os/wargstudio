@@ -10,13 +10,6 @@ from app.core.exception.exception_catalogue import ExceptionCatalogue
 from app.core.exception.warg_exception import WargException
 
 
-class ExperimentConfig(BaseModel):
-    no_tls_verify: bool = Field(
-        False, description="skip tls verification during validation"
-    )
-
-    class Config:
-        extra = "forbid"
 
 
 class ExperimentRequest(BaseModel):
@@ -26,10 +19,6 @@ class ExperimentRequest(BaseModel):
 
     experiment: Dict[Any, Any] = Field(
         ..., description="Chaos tooklit compatible Json file"
-    )
-    config: Optional[ExperimentConfig] = Field(
-        ExperimentConfig(),
-        description="configuration for verification of experimentJson",
     )
     workspaceId: str = Field(..., description="id of parent workspace")
 
@@ -45,21 +34,6 @@ class ExperimentRequest(BaseModel):
                 error_details=str(exc),
             )
 
-    @root_validator(pre=True)
-    def is_valid_config(cls, val):
-        try:
-            _config = val.get("config")
-            if _config:
-                print(" I am here and ", val.get("config"))
-                ExperimentConfig(**val.get("config"))
-                return val
-            return val
-        except ValidationError:
-            raise WargException(
-                status_code=422,
-                error=ExceptionCatalogue.VALIDATION_ERROR,
-                error_details="config can only be in format of {'no_tls_verify' : 'true'}",
-            )
 
 
 class ExperimentResponse(BaseModel):
@@ -78,7 +52,10 @@ class ExperimentResponse(BaseModel):
     workspaceId: str = Field(
         ..., description="Id of the workspace that the experiment belongs",
     )
-    organizationId: str = Field(..., description="Id of the organizaton that the experiment belongs")
+    organizationId: str = Field(
+        ...,
+        description="Id of the organizaton that the experiment belongs",
+    )
     creationTime: datetime = Field(
         ..., description="Creattion time of Experiment"
     )
@@ -96,6 +73,7 @@ class ListExperiment(BaseModel):
     """
     Response model for API response of All Experiments
     """
+
     experiments: List[ExperimentResponse] = Field(
         default=[], description="LIst of all experiments"
     )

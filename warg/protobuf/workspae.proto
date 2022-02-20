@@ -1,0 +1,92 @@
+syntax = "proto3";
+package workspace;
+
+//import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto"; 
+
+option go_package = "github.com/neel4os/azog/warg/generated/protobuf";
+
+service WorkspaceService {
+//   rpc ListWorkspaces(ListWorkspacesRequest) returns (ListWorkspacesResponse) {
+//     option (google.api.http) = {
+//       get: "/v1alpha1/workspaces"
+//     };
+//   }
+
+//   rpc GetWorkspace(GetWorkspaceRequest) returns (Workspace) {
+//     option (google.api.http) = {
+//       get: "/v1alpha1/{name=workspaces/*}"
+//     };
+//   }
+
+  rpc CreateWorkspace(CreateWorkspaceRequest) returns (Workspace) {}
+
+//   rpc UpdateWorkspace(UpdateWorkspaceRequest) returns (Workspace) {
+//     option (google.api.http) = {
+//       patch: "/v1alpha1/{workspace.name=workspaces/*}"
+//       body: "workspace"
+//     };
+//   }
+
+//   rpc DeleteWorkspace(DeleteWorkspaceRequest) returns (google.protobuf.Empty) {
+//     option (google.api.http) = {
+//       delete: "/v1alpha1/{name=workspaces/*}"
+//     };
+//   }
+}
+
+message Workspace {
+    string name = 1;
+    string description = 2;
+    UUID workspaceid = 3;
+    int32 version = 4;
+    google.protobuf.Timestamp createdTime = 5;
+    google.protobuf.Timestamp lastModifiedAt = 6;
+}
+
+message UUID{
+    string value = 1;
+}
+
+// message ListWorkspacesRequest {
+//   // The parent resource name, for example, "shelves/shelf1"
+//   string parent = 1;
+
+//   // The maximum number of items to return.
+//   int32 page_size = 2;
+
+//   // The next_page_token value returned from a previous List request, if any.
+//   string page_token = 3;
+// }
+
+// message ListWorkspacesResponse {
+//   // The field name should match the noun "workspace" in the method name.
+//   // There will be a maximum number of items returned based on the page_size field in the request.
+//   repeated Workspace workspaces = 1;
+
+//   // Token to retrieve the next page of results, or empty if there are no more results in the list.
+//   string next_page_token = 2;
+// }
+
+// message GetWorkspaceRequest {
+//   // The field will contain name of the resource requested.
+//   string name = 1;
+// }
+
+message CreateWorkspaceRequest {
+  string name = 1;
+  string description = 2;
+  //Workspace workspace = 3;
+}
+
+// message UpdateWorkspaceRequest {
+//     string name = 1;
+//     string description = 2;
+// }
+
+// message DeleteWorkspaceRequest {
+//   // The resource name of the workspace to be deleted.
+//   string name = 1;
+// }
+
+
